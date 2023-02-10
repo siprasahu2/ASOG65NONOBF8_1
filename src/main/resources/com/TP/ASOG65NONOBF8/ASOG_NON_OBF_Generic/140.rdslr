@@ -1,0 +1,53 @@
+package com.TP.ASOG65NONOBF8.ASOG_NON_OBF_Generic;
+import java.util.*;
+import com.synchronoss.ruleserver.core.xpath.XOMContainerBean;
+import com.synchronoss.ruleserver.core.xpath.XOMAccessBean;
+import com.wisor.brms.asog.xpath.XPathProcessor;
+import com.wisor.brms.asog.xpath.Occurence;
+import com.wisor.brms.asog.Populated;
+import com.wisor.brms.asog.Equals;
+import com.wisor.brms.asog.Contains;
+import com.wisor.brms.asog.LengthCheck;
+import com.wisor.brms.asog.Position;
+import com.wisor.brms.asog.DatatypeCheck;
+import com.wisor.brms.asog.SpaceCheck;
+import com.wisor.brms.asog.TNFormat;
+import com.wisor.brms.asog.RangeOfValues;
+import com.wisor.brms.asog.DateCheck;
+import com.wisor.brms.asog.Prohibited;
+import com.wisor.brms.asog.DateFormatCheck;
+import com.wisor.brms.asog.Required;
+import com.wisor.brms.asog.CapitalLetterCheck;
+import com.wisor.brms.asog.TimeFormatCheck;
+import com.wisor.brms.asog.SpecialFormat;
+import com.wisor.brms.asog.dao.SuplementOrderCheck;
+import com.wisor.brms.asog.dao.HOLIDAY;
+import com.wisor.brms.ErrorCodeMsg;
+import com.wisor.brms.ErrorResponse;
+rule "140" dialect "mvel" ruleflow-group "ASOG_NON_OBF_Generic"
+enabled true
+
+when
+xcb object
+Evaluate 
+Start Brace
+the "//ICSC" is_equal_to_values "VN00,VN05,NY01,NE01,PA65,CP10,NJ90,CP01,PA70,PA01,CP88,NJ01,GT10,VW01,GT11,CT07,CT30,CT05" 
+AND
+ the "//UOM_HDR/CCNA" is_equal_to_values "AKZ,ALY,ATX,AWL,BFL,CEO,DNC,ETX,GEE,IUW,MWB,PCK,SBM,SUF,SYC,CSO,CSX,ETP,FSC,IFP,LBH,SLL,TZV,WBT,SBN,MOE,NBC,ADM,AHD,AHM,BAK,BAO,BPN,BSM,CDA,CIV,CTJ,CUO,CZB,FLA,LAC,MCE,MMV,MTX,FSI,HLU,HNC,MUI,NWW,PFM,PIG,RMC,RMF,RRC,SMC,TGH,TQU,UMT,VGD" 
+AND
+ the 2 position_of "//ASR/ADMIN/REQTYP" is not_equal_to_values "A,F,G" 
+AND
+ the "//ASR/ADMIN/WST" is populated 
+AND
+  
+Start Brace
+ the 1 position_of "//ASR/ADMIN/TQ" field_is_equal_to_values "A,S,B,U,D,T" 
+OR
+ the 1 position_of "//ASR/ADMIN/TQ" field_is_equal_to_values "1,2,3,4,5,6,7,8,9" 
+End Brace
+ 
+End Brace
+
+then
+the error code "140" the error message "null" for the field "/ADMIN/WST"
+end

@@ -1,0 +1,65 @@
+package com.TP.ASOG65NONOBF8.ASOG_NON_OBF_Generic;
+import java.util.*;
+import com.synchronoss.ruleserver.core.xpath.XOMContainerBean;
+import com.synchronoss.ruleserver.core.xpath.XOMAccessBean;
+import com.wisor.brms.asog.xpath.XPathProcessor;
+import com.wisor.brms.asog.xpath.Occurence;
+import com.wisor.brms.asog.Populated;
+import com.wisor.brms.asog.Equals;
+import com.wisor.brms.asog.Contains;
+import com.wisor.brms.asog.LengthCheck;
+import com.wisor.brms.asog.Position;
+import com.wisor.brms.asog.DatatypeCheck;
+import com.wisor.brms.asog.SpaceCheck;
+import com.wisor.brms.asog.TNFormat;
+import com.wisor.brms.asog.RangeOfValues;
+import com.wisor.brms.asog.DateCheck;
+import com.wisor.brms.asog.Prohibited;
+import com.wisor.brms.asog.DateFormatCheck;
+import com.wisor.brms.asog.Required;
+import com.wisor.brms.asog.CapitalLetterCheck;
+import com.wisor.brms.asog.TimeFormatCheck;
+import com.wisor.brms.asog.SpecialFormat;
+import com.wisor.brms.asog.dao.SuplementOrderCheck;
+import com.wisor.brms.asog.dao.HOLIDAY;
+import com.wisor.brms.ErrorCodeMsg;
+import com.wisor.brms.ErrorResponse;
+rule "PIP04" dialect "mvel" ruleflow-group "ASOG_NON_OBF_Generic"
+enabled true
+
+when
+xcb object
+Evaluate 
+Start Brace
+
+Start Brace
+  
+Start Brace
+ it is not true that_the substring upto colon of the "//ASR/HDR/SERVICETYPE" equals "UOM" 
+AND
+ the "//CCNA" has_license for "//NCNCICOMPATIBILITY" Table 
+End Brace
+ 
+OR
+  
+Start Brace
+ the substring upto colon of the "//ASR/HDR/SERVICETYPE" equals "UOM" 
+AND
+ the "//ICSC" has_license for "//NCNCICOMPATIBILITY" Table 
+End Brace
+ 
+End Brace
+ 
+AND
+ the "//PIP/NC" is populated 
+AND
+ the "//PIP/NCI" is not populated 
+AND
+ the "//PIP/SECNCI" is populated 
+AND
+ the fields "//NC" , "//PIP/NC" "//NCI" , "" and "//SECNCI" "//PIP/SECNCI" are not compatible with database 
+End Brace
+
+then
+the error code "PIP04" the error message "null" for the field "/PIP/NC"
+end

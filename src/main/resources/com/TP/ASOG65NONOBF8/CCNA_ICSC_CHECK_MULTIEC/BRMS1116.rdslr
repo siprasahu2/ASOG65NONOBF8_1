@@ -1,0 +1,45 @@
+package com.TP.ASOG65NONOBF8.CCNA_ICSC_CHECK_MULTIEC;
+import java.util.*;
+import com.synchronoss.ruleserver.core.xpath.XOMContainerBean;
+import com.synchronoss.ruleserver.core.xpath.XOMAccessBean;
+import com.wisor.brms.asog.xpath.XPathProcessor;
+import com.wisor.brms.asog.xpath.Occurence;
+import com.wisor.brms.asog.Populated;
+import com.wisor.brms.asog.Equals;
+import com.wisor.brms.asog.Contains;
+import com.wisor.brms.asog.LengthCheck;
+import com.wisor.brms.asog.Position;
+import com.wisor.brms.asog.DatatypeCheck;
+import com.wisor.brms.asog.SpaceCheck;
+import com.wisor.brms.asog.TNFormat;
+import com.wisor.brms.asog.RangeOfValues;
+import com.wisor.brms.asog.DateCheck;
+import com.wisor.brms.asog.Prohibited;
+import com.wisor.brms.asog.DateFormatCheck;
+import com.wisor.brms.asog.Required;
+import com.wisor.brms.asog.CapitalLetterCheck;
+import com.wisor.brms.asog.TimeFormatCheck;
+import com.wisor.brms.asog.SpecialFormat;
+import com.wisor.brms.asog.dao.SuplementOrderCheck;
+import com.wisor.brms.asog.dao.HOLIDAY;
+import com.wisor.brms.ErrorCodeMsg;
+import com.wisor.brms.ErrorResponse;
+rule "BRMS1116" dialect "mvel" ruleflow-group "CCNA_ICSC_CHECK_MULTIEC"
+enabled true
+
+when
+xcb object
+Evaluate 
+Start Brace
+the "//ASR/ADMIN/ICSC" is not_equal_to_values "FV03,EC20,FP01,RS02,PT30,NP05,MK01,LF10,IO01,IC90,FB01,EV10,ET02,CC05" 
+AND
+ checkCcnaIcscCombinationInSECONDARYSOURCETARGETINFO  
+Start Brace
+ xmlInstance , "//ASR/ADMIN/CCNA" , "//OTHER_EC_DETAILS/ICSC" 
+End Brace
+ 
+End Brace
+
+then
+the error code "BRMS1116" the error message "null" for the field "/OTHER_EC_DETAILS/ICSC"
+end

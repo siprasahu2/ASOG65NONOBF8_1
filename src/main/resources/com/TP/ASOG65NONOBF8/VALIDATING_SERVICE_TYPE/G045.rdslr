@@ -1,0 +1,47 @@
+package com.TP.ASOG65NONOBF8.VALIDATING_SERVICE_TYPE;
+import java.util.*;
+import com.synchronoss.ruleserver.core.xpath.XOMContainerBean;
+import com.synchronoss.ruleserver.core.xpath.XOMAccessBean;
+import com.wisor.brms.asog.xpath.XPathProcessor;
+import com.wisor.brms.asog.xpath.Occurence;
+import com.wisor.brms.asog.Populated;
+import com.wisor.brms.asog.Equals;
+import com.wisor.brms.asog.Contains;
+import com.wisor.brms.asog.LengthCheck;
+import com.wisor.brms.asog.Position;
+import com.wisor.brms.asog.DatatypeCheck;
+import com.wisor.brms.asog.SpaceCheck;
+import com.wisor.brms.asog.TNFormat;
+import com.wisor.brms.asog.RangeOfValues;
+import com.wisor.brms.asog.DateCheck;
+import com.wisor.brms.asog.Prohibited;
+import com.wisor.brms.asog.DateFormatCheck;
+import com.wisor.brms.asog.Required;
+import com.wisor.brms.asog.CapitalLetterCheck;
+import com.wisor.brms.asog.TimeFormatCheck;
+import com.wisor.brms.asog.SpecialFormat;
+import com.wisor.brms.asog.dao.SuplementOrderCheck;
+import com.wisor.brms.asog.dao.HOLIDAY;
+import com.wisor.brms.ErrorCodeMsg;
+import com.wisor.brms.ErrorResponse;
+rule "G045" dialect "mvel" ruleflow-group "VALIDATING_SERVICE_TYPE"
+enabled true
+
+when
+xcb object
+Evaluate 
+Start Brace
+the "//ASR/HDR/SERVICETYPE" is not populated 
+OR
+  
+Start Brace
+ the "//ASR/HDR/SERVICETYPE" is populated 
+AND
+ the "//ASR/HDR/SERVICETYPE" is not_equal_to_values "Dedicated "//Internet/DEDICATED_INTERNET_SVC,Private" Internet Protocol "//EVC/PRIVATE_IP_EVC_SVC,Private" Internet Protocol "//PVC/PRIVATE_IP_PVC_SVC,Private" Internet "//Protocol/PRIVATE_IP_SVC,Standalone" "//PVC/STANDALONE_PVC_SVC,PIP" Standalone "//EVC/STANDALONE_EVC_SVC,SA-2" "//Point/TRANSPORT_SVC,SA-Multi-Point/TRANSPORT_SVC,Local" Trunking "//Service/MESSAGETRUNK_SVC,EUSA-2" "//Point/END_USER_SA_SVC,EUSA-Multi-Point/END_USER_SA_SVC,Feature" Group "//B/MESSAGETRUNK_SVC,Feature" Group "//C/MESSAGETRUNK_SVC,Feature" Group "//D/MESSAGETRUNK_SVC,CCS" "//Links/SS7_LINK_SVC,TQ/MESSAGETRUNK_SVC,SACNXX/MESSAGETRUNK_SVC,Forecasting/MESSAGETRUNK_SVC,Feature" Group "//A/FEATURE_GROUP_A_SVC,Feature" Group "//A-Multi-Point/FEATURE_GROUP_A_SVC,Virtual" "//Connection-SA/TRANSPORT_VC_SVC,Virtual" "//Connection-EUSA/END_USER_VC_SVC,Ring" "//Service/RING_SVC,WAL/WATS_SVC,WAL" "//Ext/WATS_SVC,Standalone" "//EVC/STANDALONE_EVC_SVC,Transport" "//EVC/TRANSPORT_EVC_SVC,End" User "//EVC/END_USER_EVC_SVC,Transport" Switched "//Ethernet/SWITCHED_ETHERNET_SVC,End" User Switched "//Ethernet/SWITCHED_ETHERNET_SVC,Transport" Switched Ethernet "//EVC/SWITCHED_ETHERNET_EVC_SVC,End" User Switched Ethernet "//EVC/SWITCHED_ETHERNET_EVC_SVC,UOM/TRANSPORT_SVC,UOM/MESSAGETRUNK_SVC,UOM/END_USER_SA_SVC,UOM/SS7_LINK_SVC,UOM/FEATURE_GROUP_A_SVC,UOM/TRANSPORT_VC_SVC,UOM/END_USER_VC_SVC,UOM/RING_SVC,UOM/WATS_SVC,UOM/STANDALONE_EVC_SVC,UOM/TRANSPORT_EVC_SVC,UOM/END_USER_EVC_SVC,Standalone" Trunking:STANDALONE_TRUNKING_SVC,UOM:STANDALONE_TRUNKING_SVC,UOM:SWITCHED_ETHERNET_SVC,UOM:SWITCHED_ETHERNET_EVC_SVC,UOM:DEDICATED_INTERNET_SVC,UOM:PRIVATE_IP_EVC_SVC,UOM:PRIVATE_IP_PVC_SVC,UOM:PRIVATE_IP_SVC,UOM:STANDALONE_PVC_SVC" 
+End Brace
+ 
+End Brace
+
+then
+the error code "G045" the error message "null" for the field "/HDR/SERVICETYPE"
+end

@@ -1,0 +1,39 @@
+package com.TP.ASOG65NONOBF8.COMBINATION;
+import java.util.*;
+import com.synchronoss.ruleserver.core.xpath.XOMContainerBean;
+import com.synchronoss.ruleserver.core.xpath.XOMAccessBean;
+import com.wisor.brms.asog.xpath.XPathProcessor;
+import com.wisor.brms.asog.xpath.Occurence;
+import com.wisor.brms.asog.Populated;
+import com.wisor.brms.asog.Equals;
+import com.wisor.brms.asog.Contains;
+import com.wisor.brms.asog.LengthCheck;
+import com.wisor.brms.asog.Position;
+import com.wisor.brms.asog.DatatypeCheck;
+import com.wisor.brms.asog.SpaceCheck;
+import com.wisor.brms.asog.TNFormat;
+import com.wisor.brms.asog.RangeOfValues;
+import com.wisor.brms.asog.DateCheck;
+import com.wisor.brms.asog.Prohibited;
+import com.wisor.brms.asog.DateFormatCheck;
+import com.wisor.brms.asog.Required;
+import com.wisor.brms.asog.CapitalLetterCheck;
+import com.wisor.brms.asog.TimeFormatCheck;
+import com.wisor.brms.asog.SpecialFormat;
+import com.wisor.brms.asog.dao.SuplementOrderCheck;
+import com.wisor.brms.asog.dao.HOLIDAY;
+import com.wisor.brms.ErrorCodeMsg;
+import com.wisor.brms.ErrorResponse;
+rule "RULE_14" dialect "mvel" ruleflow-group "COMBINATION"
+enabled true
+
+when
+xcb object
+Evaluate 
+Start Brace
+the "//ASR/ADMIN/ICSC" is not_equal_to_values "CI00,CI05,CI13,CI25,CI35,CI36,CI47,CI55,CI65,CJ01,CM02,CN01,CO06,CO24,CR05,CS20,CT02,CT22,CT82,CT83,CT84,CT85,CT86,CT87,CU01,CV30,CW01,CW15,EG05,ET01,FL02,FL03,GF01,IA39,IB39,IB40,IB53,IC04,ID34,ID49,ID68,IL16,IL17,IL18,IR40,IS70,IS77,IS97,IT38,IT53,IT54,IT55,IT57,IT58,IT59,IT60,IT61,IV11,IV21,IV27,IW19,IW33,IW50,IZ30,IZ76,IZ89,KT01,LV01,LW01,MG04,MG10,MR10,NC01,NW03,OH03,PC10,RT10,SM01,SM10,SP25,TU01,TU03,UM01,UT02,VV01,WI02,WI16" 
+End Brace
+
+then
+set flagIcsc to "true"  
+end

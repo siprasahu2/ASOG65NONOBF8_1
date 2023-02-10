@@ -1,0 +1,55 @@
+package com.TP.ASOG65NONOBF8.ASOG_NON_OBF_Generic;
+import java.util.*;
+import com.synchronoss.ruleserver.core.xpath.XOMContainerBean;
+import com.synchronoss.ruleserver.core.xpath.XOMAccessBean;
+import com.wisor.brms.asog.xpath.XPathProcessor;
+import com.wisor.brms.asog.xpath.Occurence;
+import com.wisor.brms.asog.Populated;
+import com.wisor.brms.asog.Equals;
+import com.wisor.brms.asog.Contains;
+import com.wisor.brms.asog.LengthCheck;
+import com.wisor.brms.asog.Position;
+import com.wisor.brms.asog.DatatypeCheck;
+import com.wisor.brms.asog.SpaceCheck;
+import com.wisor.brms.asog.TNFormat;
+import com.wisor.brms.asog.RangeOfValues;
+import com.wisor.brms.asog.DateCheck;
+import com.wisor.brms.asog.Prohibited;
+import com.wisor.brms.asog.DateFormatCheck;
+import com.wisor.brms.asog.Required;
+import com.wisor.brms.asog.CapitalLetterCheck;
+import com.wisor.brms.asog.TimeFormatCheck;
+import com.wisor.brms.asog.SpecialFormat;
+import com.wisor.brms.asog.dao.SuplementOrderCheck;
+import com.wisor.brms.asog.dao.HOLIDAY;
+import com.wisor.brms.ErrorCodeMsg;
+import com.wisor.brms.ErrorResponse;
+rule "6249" dialect "mvel" ruleflow-group "ASOG_NON_OBF_Generic"
+enabled true
+
+when
+xcb object
+Evaluate 
+Start Brace
+the "//ICSC" is not_equal_to_values "AL42,AL47,AL41,AL44,AL45,AL46,AL43,TW01,NL01,MF02,MF03,EV28,RT01,CT99,CZ02,CU03,CI12,LR01,IA04,OR03,IA16,IZ43,CI42,MR01,AU01,BT02,CA03,IB79,IS36,ST03,IB94,ID35,VI20,IB97,IS14,CI75,IB37,VI10,IS88,CI24,IA07,HT05,IA13,EN01,IA14,SG01,SL02,SL01,ID60,CI63,CI60,FT20,FT21,LN01,SB01,SB02,SB03,SB04,SC01,SC02,SC03,SC04,SC05,1WTG,2WTG,1SPR,FC10,HP01,KS01,LC20,LG01,PT40,TD02,TD03,TD04,TD05,TD06,TD08,TD09,VE15" 
+AND
+ the "//ASR/ADMIN/ICSC" is_equal_to_values "NY01,NE01,CP88,NJ90,PA70,CP01,CP10,NJ01,PA01,PA65,VW01,GT10,GT11,GT12" 
+AND
+ the 1 position_of "//ASR/ADMIN/REQTYP" field_is_equal_to_values "S,V" 
+AND
+ the "//ASR/ADMIN/ACT" is_equal_to_values "N,M,T,C" 
+AND
+ it is not true that_the "//ASR/ADMIN/PROJECT" is compared with its position 1 to 6 with values "SPUNE1" 
+AND
+ the "//ASR/ADMIN/ACTL" is populated 
+AND
+ the "//TRANSPORT/CFA" is populated 
+AND
+ it is not true that_the pos 1 to 8 of the field "//TRANSPORT/CFA" with specified segment 4 is equal to the pos 1 to 8 of another field "//ASR/ADMIN/ACTL" 
+AND
+ it is not true that_the pos 1 to 8 of the field "//TRANSPORT/CFA" with specified segment 5 is equal to the pos 1 to 8 of another field "//ASR/ADMIN/ACTL" 
+End Brace
+
+then
+the error code "6249" the error message "null" for the field "/TRANSPORT/CFA"
+end

@@ -1,0 +1,57 @@
+package com.TP.ASOG65NONOBF8.VZB_Rules;
+import java.util.*;
+import com.synchronoss.ruleserver.core.xpath.XOMContainerBean;
+import com.synchronoss.ruleserver.core.xpath.XOMAccessBean;
+import com.wisor.brms.asog.xpath.XPathProcessor;
+import com.wisor.brms.asog.xpath.Occurence;
+import com.wisor.brms.asog.Populated;
+import com.wisor.brms.asog.Equals;
+import com.wisor.brms.asog.Contains;
+import com.wisor.brms.asog.LengthCheck;
+import com.wisor.brms.asog.Position;
+import com.wisor.brms.asog.DatatypeCheck;
+import com.wisor.brms.asog.SpaceCheck;
+import com.wisor.brms.asog.TNFormat;
+import com.wisor.brms.asog.RangeOfValues;
+import com.wisor.brms.asog.DateCheck;
+import com.wisor.brms.asog.Prohibited;
+import com.wisor.brms.asog.DateFormatCheck;
+import com.wisor.brms.asog.Required;
+import com.wisor.brms.asog.CapitalLetterCheck;
+import com.wisor.brms.asog.TimeFormatCheck;
+import com.wisor.brms.asog.SpecialFormat;
+import com.wisor.brms.asog.dao.SuplementOrderCheck;
+import com.wisor.brms.asog.dao.HOLIDAY;
+import com.wisor.brms.ErrorCodeMsg;
+import com.wisor.brms.ErrorResponse;
+rule "EVPL013_38" dialect "mvel" ruleflow-group "VZB_Rules"
+enabled true
+
+when
+xcb object
+Evaluate 
+Start Brace
+the "//ASR/ADMIN/SPEC" is_equal_to_values "ELOSDRT,EVPLUN" 
+AND
+ the "//ASR/ADMIN/REQTYP" equals "SD" 
+AND
+ the 1 position_of "//EVC_DETAILS/NC" is equal to "K" 
+AND
+  
+Start Brace
+  
+Start Brace
+ it is not true that_the_section "//TRANSPORT/ECI_ASR_LEVEL" is not populated 
+AND
+ it is not true that_any occurance of the "TRANSPORT/ECI_ASR_LEVEL/ECI_FIELD/ECI_NAME" is equal to "SALESCON_TEL_NO" 
+End Brace
+ 
+OR
+ the_section "//TRANSPORT/ECI_ASR_LEVEL" is not populated 
+End Brace
+ 
+End Brace
+
+then
+the error code "EVPL013" the error message "null" for the field "/TRANSPORT/ECI_ASR_LEVEL/ECI_FIELD/ECI_NAME"
+end

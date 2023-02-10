@@ -1,0 +1,67 @@
+package com.TP.ASOG65NONOBF8.ILEC_Rules;
+import java.util.*;
+import com.synchronoss.ruleserver.core.xpath.XOMContainerBean;
+import com.synchronoss.ruleserver.core.xpath.XOMAccessBean;
+import com.wisor.brms.asog.xpath.XPathProcessor;
+import com.wisor.brms.asog.xpath.Occurence;
+import com.wisor.brms.asog.Populated;
+import com.wisor.brms.asog.Equals;
+import com.wisor.brms.asog.Contains;
+import com.wisor.brms.asog.LengthCheck;
+import com.wisor.brms.asog.Position;
+import com.wisor.brms.asog.DatatypeCheck;
+import com.wisor.brms.asog.SpaceCheck;
+import com.wisor.brms.asog.TNFormat;
+import com.wisor.brms.asog.RangeOfValues;
+import com.wisor.brms.asog.DateCheck;
+import com.wisor.brms.asog.Prohibited;
+import com.wisor.brms.asog.DateFormatCheck;
+import com.wisor.brms.asog.Required;
+import com.wisor.brms.asog.CapitalLetterCheck;
+import com.wisor.brms.asog.TimeFormatCheck;
+import com.wisor.brms.asog.SpecialFormat;
+import com.wisor.brms.asog.dao.SuplementOrderCheck;
+import com.wisor.brms.asog.dao.HOLIDAY;
+import com.wisor.brms.ErrorCodeMsg;
+import com.wisor.brms.ErrorResponse;
+rule "6298" dialect "mvel" ruleflow-group "ILEC_Rules"
+enabled true
+
+when
+xcb object
+Evaluate 
+Start Brace
+the "//ASR/CONTACT/DRC" not equals "TEL" 
+AND
+ the "//ASR/ADMIN/ICSC" is_equal_to_values "SC01,SC02,SC03,SC04,SC05,SB01,SB02,SB03,SB04" 
+AND
+ the "//ASR/ADMIN/CCNA" is not_equal_to_values "AVS,LUW,TIM,XMC,XPC,AAX,ADM,AHD,AHM,AKZ,ALY,AWL,BAK,BAO,BCU,BFL,BMI,BPN,BSM,CBL,CDA,CEO,CGL,CIV,CPF,CSO,CSU,CSX,CTJ,CUO,CUY,CZB,DNC,ETP,ETX,FLA,FSC,FSI,GEE,GLV,GMB,HLU,HNC,IAS,IFP,IND,IUW,JCR,LAC,LBH,MCE,MCZ,MMV,MOE,MTX,MUI,MWB,MWZ,NBC,NSI,NWW,OCL,PCK,PFM,PIG,RMC,RMF,RRC,SBM,SBN,SBT,SLL,SMC,SUF,SWV,SYC,SZM,TGH,TQU,TZV,UMT,VGD,ZAQ" 
+AND
+ the "//ASR/ADMIN/ACT" is_equal_to_values "N,C,T" 
+AND
+  
+Start Brace
+  
+Start Brace
+ the "//ASR/ADMIN/RTR" equals "S" 
+OR
+ the "//ASR/ADMIN/RTR" has_specified range 1 to 10 
+End Brace
+ 
+AND
+  
+Start Brace
+ the "//ASR/CONTACT/DSGCON_STR" is not populated 
+AND
+ the "//ASR/CONTACT/DSG_FAX_NO" is not populated 
+End Brace
+ 
+AND
+ it is not true that_any occurance of "MULTI_EC" is there 
+End Brace
+ 
+End Brace
+
+then
+the error code "6298" the error message "null" for the field "/CONTACT/DRC"
+end

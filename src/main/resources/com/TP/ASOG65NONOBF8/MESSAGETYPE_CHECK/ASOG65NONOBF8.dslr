@@ -1,0 +1,981 @@
+package com.TP.ASOG65NONOBF8.MESSAGETYPE_CHECK;
+
+
+import com.wisor.brms.asog.DatatypeCheck;
+import com.wisor.brms.asog.RangeOfValues;
+import com.wisor.brms.asog.DateCheck;
+import com.wisor.brms.asog.SpaceCheck;
+import com.wisor.brms.asog.Position;
+import com.wisor.brms.asog.LengthCheck;
+import com.wisor.brms.asog.dao.SuplementOrderCheck;
+import com.wisor.brms.asog.xpath.Occurence;
+import com.wisor.brms.asog.SvcType;
+import com.wisor.brms.asog.Equals;
+import com.wisor.brms.asog.dao.ASOGTABLE;
+import com.wisor.brms.asog.DateFormatCheck;
+import com.wisor.brms.asog.Contains;
+import com.wisor.brms.asog.SpecialFormat;
+import com.wisor.brms.asog.Populated;
+import com.wisor.brms.asog.xpath.Required;
+import com.wisor.brms.asog.ReqTypeAct;
+import com.wisor.brms.asog.CapitalLetterCheck;
+import com.wisor.brms.asog.xpath.Prohibited;
+import com.wisor.brms.asog.isValidValue;
+import com.wisor.brms.asog.ValidValueCheck;
+import com.wisor.brms.asog.xpath.Unique;
+import com.wisor.brms.asog.TimeFormatCheck;
+import com.wisor.brms.asog.TNFormat;
+import com.wisor.brms.asog.ThoroughFareHelper;
+import com.wisor.brms.asog.IntervalDurationMatcher;
+import com.wisor.brms.asog.CommaSeparatedSpace;
+import com.wisor.brms.asog.engine.XpathLookup;
+import com.wisor.brms.asog.DisplayMessage;
+import com.wisor.brms.asog.AsogGuidelineVersion;
+import com.wisor.brms.asog.dao.HOLIDAY;
+import com.wisor.brms.logging.Logger;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Collection;
+import ilog.rules.xml.IlrXmlObject;
+import java.util.*;
+import ilog.rules.factory.IlrReflect;
+import ilog.rules.xml.binding.IlrXmlDefaultDataDriver;
+import java.io.StringReader;
+import ilog.rules.xml.IlrXmlErrorException;
+import ilog.rules.xml.IlrXmlError;
+import com.wisor.common.brms.exception.BRMSValidationException;
+import ilog.rules.data.IlrError;
+import ilog.rules.xml.runtime.IlrXmlRtException;
+import com.wisor.brms.ErrorResponse;
+import java.util.Vector;
+import com.wisor.brms.asog.AsogGuidelineVersion ;
+import com.wisor.brms.asog.DateFormatCheck ;
+import com.wisor.brms.asog.LengthCheck ;
+import com.wisor.brms.asog.Populated ;
+import com.wisor.brms.asog.Position ;
+import com.wisor.brms.asog.dao.ASOGTABLE ;
+import com.wisor.brms.asog.dao.SuplementOrderCheck ;
+import com.wisor.brms.asog.xpath.Occurence ;
+
+expander ASOG65NONOBF8.dsl
+function boolean CheckKeyValuePairExists(java.lang.String arg, java.lang.String arg1)
+{
+Logger log = new Logger();
+log.debug("entering CheckKeyValuePairExists method");
+String Value=null;
+ArrayList al =new ArrayList();
+
+ al.add("ADM:9163");
+ al.add("AWL:9198");
+ al.add("BNY:9185");
+ al.add("BPN:9118");
+ al.add("BSM:9193");
+ al.add("HRZ:9146");
+ al.add("IUW:9103");
+ al.add("PFM:9191");
+ al.add("SBM:9182");
+ al.add("SZM:9047");
+ al.add("WBT:9183");
+ al.add("YBG:9179");
+ Iterator it =al.iterator();
+
+ log.debug("Contents of List Combination:"+ al);		         
+ 
+ System.out.println("Check point 1:"+ arg +arg1);
+ if ((arg == null) || (arg.equals(""))||(arg1 == null) || (arg1.equals(""))) {
+            log.debug("exiting with false");
+             return false;
+         }
+String Keyvalue=(arg.trim()).toUpperCase()+":"+(arg1.trim()).toUpperCase();
+log.debug("Entering KeyPair value:"  +Keyvalue);
+
+  System.out.println("Check point 2:"+ Keyvalue);       
+    try {
+       	while(it.hasNext()) {
+           	Value = (String)it.next();
+           	 log.debug("Combination Value:"+ Value); 
+             if(Keyvalue.equalsIgnoreCase(Value)){
+             	log.debug("exiting with true");
+		        	 return true;
+		         }
+		      log.debug("exiting with false");  
+       }
+    }catch (Exception e) {
+	log.error("Exception occurred CheckKeyValuePairExists : " + e);
+	return false;
+ }      
+return false;     
+}
+function void createModifiedXml()
+{
+String tagName = "ASR_SERVICE_REQUEST";
+        int startindex = xmlInstance.indexOf("<" + tagName);
+       int endIndex = xmlInstance.indexOf(">", startindex);
+        int finalEndIndex = endIndex + 1;
+
+        if ((startindex != -1) && (endIndex != -1)) {
+            String rootTag = xmlInstance.substring(startindex, finalEndIndex);
+            String finalRootTag = "<" + tagName + ">";
+            rootTag = rootTag.replace('\\','/');
+            modifiedXml = xmlInstance.replaceFirst(rootTag, finalRootTag);
+            
+        }
+}
+function void finalresult(Collection xmlResponse)
+{
+Collection reponse = (Collection)xmlResponse;
+	System.out.println(reponse);
+}
+function java.lang.String getXPathForClassName(IlrRuleInstance ruleInstance, String className)
+{
+String xpathWithPosition = className;
+        Object[] objs = ruleInstance.getObjects();
+        boolean x = false;
+        boolean found = false;
+
+        for (int n = 0; n < objs.length; n++) {
+            Object obj = objs[n];
+
+            if (obj instanceof IlrXmlObject) {
+                IlrXmlObject xmlObj = (IlrXmlObject) obj;
+					
+					
+					String xpath = xmlObj.getAbsoluteXPath(false);
+        				int idx = xpath.lastIndexOf("/");
+
+        					if ((idx != -1) && (idx < (xpath.length() - 1))) {
+           					x = xpath.substring(idx + 1).equalsIgnoreCase(className);
+        				}
+
+        					
+                if (x) {
+                    xpathWithPosition = xmlObj.getAbsoluteXPath(true);
+                    found = true;
+
+                    break;
+                }
+            } else if (obj instanceof IlrDefaultCollector) {
+                IlrDefaultCollector defaultCollector = (IlrDefaultCollector) obj;
+                Enumeration anEnumeration = defaultCollector.elements();
+
+                while (anEnumeration.hasMoreElements()) {
+                    IlrXmlObject xmlObj = (IlrXmlObject) anEnumeration.nextElement();
+
+                    if (x) {
+                        xpathWithPosition = xmlObj.getAbsoluteXPath(true);
+                        found = true;
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        return xpathWithPosition;
+}
+function boolean hasMatchingName(IlrXmlObject xmlObj, String className)
+{
+String xpath = xmlObj.getAbsoluteXPath(false);
+        int idx = xpath.lastIndexOf("/");
+
+        if ((idx != -1) && (idx < (xpath.length() - 1))) {
+            return xpath.substring(idx + 1).equalsIgnoreCase(className);
+        }
+
+        return false;
+}
+function boolean hasMatchingXPath(IlrXmlObject xmlObj, String xpath)
+{
+return xmlObj.getAbsoluteXPath(false).equalsIgnoreCase(xpath);
+}
+function void loadXMLDataFile(java.lang.String xmlInstance)
+{
+try
+ {
+	IlrReflect reflect = context.getRuleset().reflect;
+    IlrXmlDefaultDataDriver dataDriver = new IlrXmlDefaultDataDriver(reflect);
+	IlrXmlObject object = dataDriver.readObject(new StringReader(xmlInstance));
+	dataDriver.assertObjects(object,context,null);
+ }
+ catch ( Exception e ){
+  if(e instanceof IlrXmlErrorException){
+   IlrXmlErrorException schemaException = (IlrXmlErrorException)e;
+   IlrXmlError[] errors = schemaException.getErrors();
+   BRMSValidationException[] brmsArray = new BRMSValidationException[errors.length];
+    for(int i=0;i<errors.length;i++)
+   {
+    BRMSValidationException aBRMSValidationException = new BRMSValidationException();
+    aBRMSValidationException.XPath=errors[i].XPath;
+    aBRMSValidationException.type=errors[i].type;
+    String source = errors[i].source;
+    
+  
+   // System.out.println("source "+errors[i].source);
+   // System.out.println("Type "+errors[i].type);
+    //System.out.println("Type "+errors[i].XPath);
+    String message = ((IlrError)(errors[i])).message;
+    //System.out.println("message "+message);
+    
+      if(source == null)
+    {
+    	source = message + errors[i].XPath;
+    }
+    if(e instanceof IlrXmlRtException)
+    {
+    	IlrXmlRtException excep = (IlrXmlRtException)e;
+    	excep.printStackTrace();
+    }
+    
+    aBRMSValidationException.message=errors[i].source;
+    brmsArray[i]=aBRMSValidationException;
+    ErrorResponse resp = new ErrorResponse(errors[i].type,source);
+    xmlResponse.add(resp);
+    
+   }
+  // xmlResponse.add(brmsArray);
+     } else{
+   e.printStackTrace();
+  }
+ }
+  
+}
+function boolean multiIcscCheck(Vector coll, String icsc, String ccna, String acsIcsc, String serviceType)
+{
+if (coll == null) {
+            return false;
+        }
+
+        ArrayList arrList = new Occurence(xmlInstance).getvalue(coll);
+        ArrayList xmlIcsc = new ArrayList();
+        IlrXmlObject obj = null;
+        xmlIcsc.add(acsIcsc);
+        try {
+            if (arrList.size() != 0) {
+                for (int i = 0; i < arrList.size(); i++) {
+                    obj = (IlrXmlObject) arrList.get(i);
+
+                    Object ob = new IlrReflect().get(obj, obj.getXOMClass().getAttribute(icsc));
+
+                    if (ob != null) {
+                        if (ob.toString().length() > 0) {
+                            xmlIcsc.add(ob.toString());
+                        }
+                    }
+                }
+            }
+ //ArrayList interfaceList=getIcscInterfaceValues(fileContent);
+
+            if (new SuplementOrderCheck(xmlInstance).ccnaMultiEcIcscCheck(xmlIcsc,ccna,serviceType)) {
+                return true;
+            }
+
+            return false;
+        }
+        catch (Exception e) {
+        }
+
+        return false;
+}
+function boolean prevOrderSUP1CheckWithRespAccept(java.lang.String pon, java.lang.String ccna, java.lang.String icsc, java.lang.String respDescription, java.lang.String reqStatus, java.lang.String xmlInstance, java.lang.String ver)
+{
+Logger log = new Logger();
+
+log.debug("entering prevOrderSUP1CheckWithRespAccept Function Set");
+if((pon==null || "".equalsIgnoreCase(pon)) || (ccna==null || "".equalsIgnoreCase(ccna)) || (icsc==null || "".equalsIgnoreCase(icsc)) || (respDescription==null || "".equalsIgnoreCase(respDescription)) || (reqStatus==null || "".equalsIgnoreCase(reqStatus)))
+	return false;
+
+
+SuplementOrderCheck ob=new SuplementOrderCheck(xmlInstance);
+ArrayList reqVerList=new ArrayList();
+ArrayList respVerList = new ArrayList();
+ArrayList respVerListForTranSusp = new ArrayList();
+
+String staticWhereReq=" TRANSACTIONINFOID=(SELECT MAX(TRANSACTIONINFOID) FROM TRANSACTIONINFO WHERE MESSAGEREF1 ='"+pon+"' AND MESSAGECATEGORY IN('Outbound','Sup-Outbound','ASR REQUEST') AND ((EXTRACTVALUE(SOURCEXML,'//HDR/CCNA','xmlns=\"http://www.atis.org/OBF/ASR/UOM-ASR\"')='"+ccna+"' AND EXTRACTVALUE(SOURCEXML,'//ADMIN/SUP','xmlns=\"http://www.atis.org/OBF/ASR/UOM-ASR\"')='1' AND EXTRACTVALUE(SOURCEXML,'//HDR/ICSC','xmlns=\"http://www.atis.org/OBF/ASR/UOM-ASR\"')='"+icsc+"') OR (EXTRACTVALUE(TARGETXML,'//HDR/CCNA','xmlns=\"http://www.atis.org/OBF/ASR/UOM-ASR\"')='"+ccna+"' AND EXTRACTVALUE(TARGETXML,'//ADMIN/SUP','xmlns=\"http://www.atis.org/OBF/ASR/UOM-ASR\"')='1' AND EXTRACTVALUE(TARGETXML,'//HDR/ICSC','xmlns=\"http://www.atis.org/OBF/ASR/UOM-ASR\"')='"+icsc+"')))";
+
+
+try{
+int reqFlag=0;
+int reqRespFlag=0;
+String reqVer="";
+String reqVerForTranSusp = "";
+
+reqVerList=ob.genericDBQuery("TRANSACTIONINFO","MESSAGEREF2#VARCHAR","",staticWhereReq);
+if(reqVerList!=null && reqVerList.size()>0){
+	ArrayList tempList=(ArrayList)reqVerList.get(0);
+	if(tempList!=null && tempList.size()>0){
+		reqVer=tempList.get(0).toString();
+		reqFlag=1;
+		
+	}
+}
+System.out.println("inside method");
+System.out.println("reqVerList :" +reqVerList);
+System.out.println("reqVer :" +reqVer);
+
+
+
+if(reqVer!=null && !reqVer.equalsIgnoreCase("") && !reqVer.equalsIgnoreCase(ver)){
+String staticWhereRespSup1=" TRANSACTIONINFOID=(SELECT MAX(TRANSACTIONINFOID) FROM TRANSACTIONINFO WHERE MESSAGEREF1 ='"+pon+"' AND MESSAGEREF2='"+reqVer+"' AND DESCRIPTION IN("+respDescription+") AND MESSAGECATEGORY IN ('ASR RESPONSE','Sup-Outbound') AND ((EXTRACTVALUE(SOURCEXML,'//HDR/CCNA','xmlns=\"http://www.atis.org/OBF/ASR/UOM-ASR\"')='"+ccna+"' AND EXTRACTVALUE(SOURCEXML,'//HDR/ICSC','xmlns=\"http://www.atis.org/OBF/ASR/UOM-ASR\"')='"+icsc+"') OR (EXTRACTVALUE(TARGETXML,'//HDR/CCNA','xmlns=\"http://www.atis.org/OBF/ASR/UOM-ASR\"')='"+ccna+"' AND EXTRACTVALUE(TARGETXML,'//HDR/ICSC','xmlns=\"http://www.atis.org/OBF/ASR/UOM-ASR\"')='"+icsc+"')))";
+
+System.out.println("staticWhereRespSup1 : "+ staticWhereRespSup1);
+System.out.println("respVerList :" +respVerList);
+
+respVerList=ob.genericDBQuery("TRANSACTIONINFO","MESSAGEREF2#VARCHAR","",staticWhereRespSup1);
+if(respVerList!=null && respVerList.size()>0){
+log.debug("respVerList :" +respVerList);
+	ArrayList tempList=(ArrayList)respVerList.get(0);
+	log.debug("tempList :" +tempList);
+	if(tempList!=null && tempList.size()>0){
+		reqVer=tempList.get(0).toString();
+		log.debug("reqVer : " +reqVer);
+		reqRespFlag=1;
+		
+	}
+}
+else {
+	
+	String staticWhereForTranSusp=" TRANSACTIONINFOID=(SELECT MAX(TRANSACTIONINFOID) FROM TRANSACTIONINFO WHERE MESSAGEREF1 ='"+pon+"' AND MESSAGEREF2='"+reqVer+"' AND DESCRIPTION IN('Sup-Outbound') AND MESSAGECATEGORY IN ('Sup-Outbound') AND CURRENTSTATUS IN('TRANSMISSION_SUSPENDED') AND ((EXTRACTVALUE(SOURCEXML,'//HDR/CCNA','xmlns=\"http://www.atis.org/OBF/ASR/UOM-ASR\"')='"+ccna+"' AND EXTRACTVALUE(SOURCEXML,'//HDR/ICSC','xmlns=\"http://www.atis.org/OBF/ASR/UOM-ASR\"')='"+icsc+"') OR (EXTRACTVALUE(TARGETXML,'//HDR/CCNA','xmlns=\"http://www.atis.org/OBF/ASR/UOM-ASR\"')='"+ccna+"' AND EXTRACTVALUE(TARGETXML,'//HDR/ICSC','xmlns=\"http://www.atis.org/OBF/ASR/UOM-ASR\"')='"+icsc+"')))";
+	
+	log.debug("staticWhereForTranSusp : "+ staticWhereForTranSusp);
+	respVerListForTranSusp=ob.genericDBQuery("TRANSACTIONINFO","MESSAGEREF2#VARCHAR","",staticWhereForTranSusp);
+	System.out.println("respVerListForTranSusp :" +respVerListForTranSusp);
+	if(respVerListForTranSusp!=null && respVerListForTranSusp.size()>0){
+		
+		log.debug("respVerListForTranSusp :" +respVerListForTranSusp);
+		ArrayList tempList1=(ArrayList)respVerListForTranSusp.get(0);
+		log.debug("tempList1 :" +tempList1);
+		if(tempList1!=null && tempList1.size()>0){
+			reqVerForTranSusp=tempList1.get(0).toString();
+			log.debug("reqVerForTranSusp : " +reqVerForTranSusp);
+			reqRespFlag=1;
+		}
+	}
+	
+	}
+}
+
+if(reqRespFlag==1){
+	return true;
+}
+
+}
+catch(Exception e){
+	log.debug("exception occured in prevOrderSUP1CheckWithRespAccept Function Set"+e);
+}
+
+ 
+return false;
+}
+function boolean virtualAsogCutOverOrderReject(java.lang.String arg1, java.lang.String arg2, ilog.rules.xml.types.IlrDateTime arg3)
+{
+boolean val = new AsogGuidelineVersion().asogCutOverOrderReject(arg1,arg2,arg3.toString());
+return val;
+
+}
+function boolean virtualCheckMaximumLengthOfTrimmedTag(java.lang.String arg1, int arg2)
+{
+return new LengthCheck().checkMaximumlength(arg1.trim(),arg2);
+
+}
+function boolean virtualPosOfSegmentsDoesNotEquals(int arg1, java.lang.String arg2, java.lang.String arg3, java.lang.String arg4)
+{
+return new LengthCheck().posOfSegmentsDoesNotEquals(arg3, arg2, arg1, arg4);
+
+}
+function boolean virtualSegmentNumberLengthInRange(int arg1, java.lang.String arg2, int arg3, int arg4)
+{
+return (!arg2.equals("") && new LengthCheck().segmentNumberLengthInRange(arg2,arg1,arg3,arg4));
+
+}
+function boolean virtualSegmentsDoesNotContainsAlphafollowedByNumerics(java.lang.String arg1, java.lang.String arg2, int arg3)
+{
+return new LengthCheck().segmentsDoesNotContainsAlphafollowedByNumerics(arg1,arg2,arg3);
+
+}
+function boolean virtualIntegerToString(java.math.BigInteger arg1)
+{
+
+            String str=null;
+if(arg1 !=null)
+{
+str =  arg1.toString();
+return str;
+}
+return str;
+            
+}
+function boolean virtualPositionAfterDelimeterPopulated(java.lang.String arg1, int arg2, java.lang.String arg3)
+{
+return new Position().positionAfterDelimeterPopulated(arg1,arg2,arg3.charAt(0));
+
+}
+function boolean virtualPositionOftagValueNotEqualToValue(int arg1, java.lang.String arg2, java.lang.String arg3)
+{
+if(arg2 == null)
+      return true;
+else{
+      try{
+      boolean val = new Position().positionOftagValueNotEqualToValue(arg1,arg2,arg3);
+return val;
+}catch(Exception e){
+            e.printStackTrace();
+return false;
+}
+}
+}
+function boolean virtualPositionOftagValueNotEqualToValues(int arg1, java.lang.String arg2, java.lang.String arg3)
+{
+if(arg2 == null)
+      return true;
+else{
+      try{
+      boolean val = new Position().positionOftagValueNotEqualToValues(arg1,arg2,arg3);
+return val;
+}catch(Exception e){
+            e.printStackTrace();
+return false;
+}
+}
+}
+function boolean posToPosfetchAbbreviationLOCATIONTable(int arg1, int arg2, java.lang.String arg3)
+{
+return arg1>=1 && arg1<=arg2 && arg3.length()<=arg2 && new ASOGTABLE().fetchAbbreviationLOCATIONTable(arg3.substring(arg1-1,arg3.length()));
+
+}
+function boolean virtualSegmentFetchAbbreviationLOCATIONTable(int arg1, java.lang.String arg2)
+{
+return (!arg2.equals("") && new ASOGTABLE().segmentFetchAbbreviationLOCATIONTable(arg2,arg1));
+
+}
+function boolean virtual_prevOrderSUP1CheckWithRespAccept(java.lang.String arg1, java.lang.String arg2, java.lang.String arg3, java.lang.String arg4, java.lang.String arg5, java.lang.String arg6, java.lang.String arg7)
+{
+Object[] obj=new Object[]{arg1,arg2,arg3,arg4,arg5,arg6,arg7};
+Boolean retVal=prevOrderSUP1CheckWithRespAccept(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+return retVal.booleanValue();
+
+}
+function boolean virtual_prevOrderSUP1CheckWithRespReject(java.lang.String arg1, java.lang.String arg2, java.lang.String arg3, java.lang.String arg4, java.lang.String arg5, java.lang.String arg6)
+{
+Object[] obj=new Object[]{arg1,arg2,arg3,arg4,arg5,arg6};
+Boolean retVal=prevOrderSUP1CheckWithRespAccept(arg1,arg2,arg3,arg4,arg5,arg6);
+return retVal.booleanValue();
+
+}
+function boolean getSaliParent(java.lang.String arg1, java.lang.String arg2, java.lang.String arg3)
+{
+IlrReflect xomReflect = (IlrReflect) context.getParameterValue("xomReflect");
+Object[] obj1  = new Object[] {obj , newArg, newArg_2, xomReflect, context};
+Boolean retVal=getSaliParent(obj , newArg, newArg_2, xomReflect, context);
+return retVal.booleanValue();
+
+}
+function boolean virtualAnyOccurenceOfServPrefPopulated(java.util.Vector newArg, java.lang.String newArg_2)
+{
+return new Occurence().anyOccurenceOfServPrefPopulated(newArg,newArg_2);
+
+}
+function boolean virtualRoutingMatrixCheck(java.util.Vector newArg, java.lang.String newArg_2, java.lang.String newArg_3)
+{
+Object[] obj=new Object[]{newArg, newArg_2, newArg_3};
+Boolean retVal=routingMatrixCheck(newArg, newArg_2, newArg_3);
+return retVal.booleanValue();
+
+}
+function boolean virtualRoutingMatrixCheck1(java.util.Vector newArg, java.lang.String newArg_2, java.lang.String newArg_3)
+{
+return new Occurence().routingMatrixCheck1(newArg,newArg_2,newArg_3);
+
+}
+function boolean virtualRoutingMatrixCheck2(java.util.Vector newArg, java.lang.String newArg_2, java.lang.String newArg_3)
+{
+Object[] obj=new Object[]{newArg, newArg_2, newArg_3};
+Boolean retVal=routingMatrixCheck2(newArg, newArg_2, newArg_3);
+return retVal.booleanValue();
+
+}
+function boolean virtualSegmentCount(ilog.rules.xml.IlrXmlObject arg1)
+{
+Object[] obj=new Object[]{arg1};
+Boolean retVal=segmentCount(arg1);
+return retVal.booleanValue();
+
+}
+function boolean virtualanyCharacterOfFieldIs(java.lang.String newArg, java.lang.String newArg_2)
+{
+return new Occurence().anyCharacterOfFieldIs(newArg,newArg_2.charAt(0));
+
+}
+function void FieldShouldNotUnique(XOMContainerBean xcb, String section, String field, String eCode, String eMsg)
+{
+		try{
+		XOMAccessBean accessBean = xcb.xpath(section);
+        XOMContainerBean arr[] = accessBean.nodeSet();
+        for(int i = 0; i < arr.length; i++){
+        	for(int j = i+1; j < arr.length; j++){
+        			String xpath1 = (new StringBuilder(String.valueOf(section))).append("[").append(i + 1).append("]/").append(field).toString();
+        			String xpath2 = (new StringBuilder(String.valueOf(section))).append("[").append(j + 1).append("]/").append(field).toString();
+        			String str1=(xcb.xpath(xpath1).stringValue());
+        			String str2=(xcb.xpath(xpath2).stringValue());
+        			if(((str1.equals(str2))) && ((new Populated()).isPopulated((xcb.xpath(xpath1)).stringValue()))
+        			&& ((new Populated()).isPopulated((xcb.xpath(xpath2)).stringValue())))
+        			{
+        				xcb.logError(eCode,eMsg,xpath1);
+        				break;
+        			}
+        		}
+        	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

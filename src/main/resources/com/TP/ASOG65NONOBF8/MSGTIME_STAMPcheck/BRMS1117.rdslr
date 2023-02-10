@@ -1,0 +1,43 @@
+package com.TP.ASOG65NONOBF8.MSGTIME_STAMPcheck;
+import java.util.*;
+import com.synchronoss.ruleserver.core.xpath.XOMContainerBean;
+import com.synchronoss.ruleserver.core.xpath.XOMAccessBean;
+import com.wisor.brms.asog.xpath.XPathProcessor;
+import com.wisor.brms.asog.xpath.Occurence;
+import com.wisor.brms.asog.Populated;
+import com.wisor.brms.asog.Equals;
+import com.wisor.brms.asog.Contains;
+import com.wisor.brms.asog.LengthCheck;
+import com.wisor.brms.asog.Position;
+import com.wisor.brms.asog.DatatypeCheck;
+import com.wisor.brms.asog.SpaceCheck;
+import com.wisor.brms.asog.TNFormat;
+import com.wisor.brms.asog.RangeOfValues;
+import com.wisor.brms.asog.DateCheck;
+import com.wisor.brms.asog.Prohibited;
+import com.wisor.brms.asog.DateFormatCheck;
+import com.wisor.brms.asog.Required;
+import com.wisor.brms.asog.CapitalLetterCheck;
+import com.wisor.brms.asog.TimeFormatCheck;
+import com.wisor.brms.asog.SpecialFormat;
+import com.wisor.brms.asog.dao.SuplementOrderCheck;
+import com.wisor.brms.asog.dao.HOLIDAY;
+import com.wisor.brms.ErrorCodeMsg;
+import com.wisor.brms.ErrorResponse;
+rule "BRMS1117" dialect "mvel" ruleflow-group "MSGTIME_STAMPcheck"
+enabled true
+
+when
+xcb object
+Evaluate 
+Start Brace
+the aSOG_VER is populated 
+AND
+ the "//ICSC" is populated 
+AND
+ the order with asog version aSOG_VER  icsc "//ICSC" and the mSG_TIMESTAMP of "//ASR_SERVICE_REQUEST/HDR" cannot be submitted because of "//ASOG" Upgrade 
+End Brace
+
+then
+the error code "BRMS1117" the error message "null" for the field "/HDR/MSG_TIMESTAMP"
+end

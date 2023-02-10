@@ -1,0 +1,45 @@
+package com.TP.ASOG65NONOBF8.SUP1;
+import java.util.*;
+import com.synchronoss.ruleserver.core.xpath.XOMContainerBean;
+import com.synchronoss.ruleserver.core.xpath.XOMAccessBean;
+import com.wisor.brms.asog.xpath.XPathProcessor;
+import com.wisor.brms.asog.xpath.Occurence;
+import com.wisor.brms.asog.Populated;
+import com.wisor.brms.asog.Equals;
+import com.wisor.brms.asog.Contains;
+import com.wisor.brms.asog.LengthCheck;
+import com.wisor.brms.asog.Position;
+import com.wisor.brms.asog.DatatypeCheck;
+import com.wisor.brms.asog.SpaceCheck;
+import com.wisor.brms.asog.TNFormat;
+import com.wisor.brms.asog.RangeOfValues;
+import com.wisor.brms.asog.DateCheck;
+import com.wisor.brms.asog.Prohibited;
+import com.wisor.brms.asog.DateFormatCheck;
+import com.wisor.brms.asog.Required;
+import com.wisor.brms.asog.CapitalLetterCheck;
+import com.wisor.brms.asog.TimeFormatCheck;
+import com.wisor.brms.asog.SpecialFormat;
+import com.wisor.brms.asog.dao.SuplementOrderCheck;
+import com.wisor.brms.asog.dao.HOLIDAY;
+import com.wisor.brms.ErrorCodeMsg;
+import com.wisor.brms.ErrorResponse;
+rule "19_27" dialect "mvel" ruleflow-group "SUP1"
+enabled true
+
+when
+xcb object
+Evaluate 
+Start Brace
+the "//ASR/ADMIN/SUP" is populated 
+AND
+ the pon "//ASR/ADMIN/PON" , ccna "//ASR/ADMIN/CCNA" , icsc "//ASR/ADMIN/ICSC" and ver "//ASR/ADMIN/VER" combination has_the response with description "'Response-Accept'" and the previous version SUP1 order with status "'TRANSMITTED'|'WAITING "//FOR" TRANSMISSION'|'SAVED'|'TRANSLATION FAILED'|'TRANSLATION_FAILED_NOTIFIED'|'TRANSLATION_FAILED_NOT_NOTIFIED'|'TRANSLATION_FAILED_TRANSMITTED'|'TRANSMISSION FAILED'|'TRANSMISSION_FAILED_NOTIFIED'|'TRANSMISSION_FAILED_NOT_NOTIFIED'|'TRANSMISSION_SUSPENDED'" for the xml xmlInstance 
+AND
+ it is not true that_the order is a resend order 
+AND
+ it is not true that_duplicateOrder pon "//ASR/ADMIN/PON" ver "//ASR/ADMIN/VER" ccna "//ASR/ADMIN/CCNA" icsc "//ASR/ADMIN/ICSC" exists in DB 
+End Brace
+
+then
+the error code "19" the error message "null" for the field "/ADMIN/SUP"
+end
